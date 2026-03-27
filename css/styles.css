@@ -263,12 +263,12 @@ html, body {
 
 .btn-small {
   font-family: 'Silkscreen', cursive;
-  font-size: 10px;
+  font-size: 13px;
   color: var(--pink-mid);
   background: var(--white-glass);
   border: 1px solid var(--cell-border);
-  border-radius: 8px;
-  padding: 8px 20px;
+  border-radius: 10px;
+  padding: 10px 28px;
   cursor: pointer;
   transition: all 0.2s ease;
   backdrop-filter: blur(6px);
@@ -329,12 +329,12 @@ html, body {
 .player-tag {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   background: var(--white-glass);
   border: 1px solid transparent;
   border-radius: 20px;
-  padding: 6px 14px;
-  font-size: 11px;
+  padding: 8px 18px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
   transition: all 0.3s ease;
   backdrop-filter: blur(6px);
@@ -349,14 +349,14 @@ html, body {
 }
 
 .tag-icon {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   image-rendering: pixelated;
   object-fit: contain;
 }
 
 .vs-text {
-  font-size: 10px;
+  font-size: 13px;
   color: rgba(255, 255, 255, 0.3);
 }
 
@@ -463,11 +463,11 @@ html, body {
 
 /* ===== GAME STATUS ===== */
 .game-status {
-  font-size: 12px;
+  font-size: 16px;
   color: var(--pink-mid);
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   text-shadow: 0 0 8px rgba(255, 105, 180, 0.4);
-  min-height: 20px;
+  min-height: 24px;
 }
 
 .game-controls {
@@ -479,10 +479,16 @@ html, body {
 .ai-thinking {
   display: none;
   align-items: center;
-  gap: 8px;
+  gap: 3px;
   color: var(--lavender);
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 1px;
+  background: rgba(60, 30, 80, 0.5);
+  padding: 8px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(201, 177, 255, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .ai-thinking.visible {
@@ -495,8 +501,8 @@ html, body {
 }
 
 .thinking-dots span {
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
   background: var(--lavender);
   border-radius: 50%;
   animation: dot-bounce 1.2s ease-in-out infinite;
@@ -513,10 +519,10 @@ html, body {
 /* ===== STATS BAR ===== */
 .stats-bar {
   display: flex;
-  gap: 20px;
-  padding: 8px 16px;
+  gap: 28px;
+  padding: 12px 24px;
   background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -528,15 +534,15 @@ html, body {
 }
 
 .stat-label {
-  font-size: 6px;
-  color: rgba(255, 255, 255, 0.35);
-  letter-spacing: 1px;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 1.5px;
   text-transform: uppercase;
 }
 
 .stat-value {
-  font-size: 12px;
-  color: var(--lavender);
+  font-size: 16px;
+  color: #d4c4ff;
   font-family: 'Press Start 2P', cursive;
 }
 

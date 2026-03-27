@@ -329,7 +329,7 @@ function handleCellClick(e) {
     state.currentPlayer = HUMAN;
     updatePlayerIndicator();
     setStatus('your turn ♡');
-  }, 500 + Math.random() * 400); // 500-900ms delay
+  }, 1200 + Math.random() * 400); // 500-900ms delay
 }
 
 function endGame(result) {
