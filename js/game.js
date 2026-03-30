@@ -309,7 +309,7 @@ function handleCellClick(e) {
   // Switch to AI
   state.currentPlayer = AI;
   updatePlayerIndicator();
-  setStatus('AI thinking...');
+  setStatus('');
   showThinking(true);
 
   // Delay for feel + thinking animation
@@ -328,7 +328,7 @@ function handleCellClick(e) {
 
     state.currentPlayer = HUMAN;
     updatePlayerIndicator();
-    setStatus('your turn ♡');
+    setStatus('your turn ');
   }, 1200 + Math.random() * 400); // 500-900ms delay
 }
 
@@ -423,7 +423,7 @@ function resetGame() {
 
   updatePlayerIndicator();
   updateStats();
-  setStatus('your turn ♡');
+  setStatus('your turn');
   showThinking(false);
 }
 

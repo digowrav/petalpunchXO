@@ -264,7 +264,7 @@ html, body {
 .btn-small {
   font-family: 'Silkscreen', cursive;
   font-size: 13px;
-  color: var(--pink-mid);
+  color: #fff;
   background: var(--white-glass);
   border: 1px solid var(--cell-border);
   border-radius: 10px;
@@ -283,7 +283,7 @@ html, body {
 
 /* ===== AI BADGE ===== */
 .ai-badge {
-  font-size: 9px;
+  font-size: 13px;
   color: rgba(255, 255, 255, 0.6);
   letter-spacing: 1px;
   display: flex;
@@ -587,8 +587,8 @@ html, body {
 
 .result-stats {
   display: flex;
-  gap: 24px;
-  padding: 12px 20px;
+  gap: 32px;
+  padding: 14px 28px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -602,14 +602,14 @@ html, body {
 }
 
 .result-stat-label {
-  font-size: 6px;
-  color: rgba(255, 255, 255, 0.4);
-  letter-spacing: 1px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 1.5px;
   text-transform: uppercase;
 }
 
 .result-stat-value {
-  font-size: 14px;
+  font-size: 18px;
   color: var(--lavender);
   font-family: 'Press Start 2P', cursive;
 }
