@@ -1,13 +1,12 @@
 /**
- * Tic Tac Toe — AI powered by Minimax with Alpha-Beta Pruning
+ * petalpunchXO — AI powered by Minimax, Alpha-Beta Pruning, and Q-Learning
  * 
- * This game demonstrates adversarial search algorithms:
- * - Easy:   Random moves
- * - Medium: Depth-limited Minimax (depth 3)
+ * Three AI strategies demonstrating different AI paradigms:
+ * - Easy:   Q-Learning agent (learned from self-play via reinforcement learning)
+ * - Medium: Depth-limited Minimax (classical adversarial search, depth 3)
  * - Hard:   Full Minimax with Alpha-Beta Pruning (optimal/unbeatable)
  *
- * The AI is the MIN player (tries to minimize score).
- * The human is the MAX player (tries to maximize score).
+ * The human is the MAX player, the AI is the MIN player.
  * Utility: +10 for human win, -10 for AI win, 0 for draw.
  */
 
@@ -18,6 +17,9 @@ const state = {
   difficulty: 'medium',
   gameOver: false,
   stats: { nodesExplored: 0, pruned: 0, depth: 0 },
+  qTable: null,         // loaded from q_table.json
+  qTableLoaded: false,
+  gameTree: null,        // stores the last computed game tree for visualization
 };
 
 const HUMAN = 'human';
@@ -48,6 +50,66 @@ const screens = {
   game: $('#screen-game'),
   result: $('#screen-result'),
 };
+
+// ============ Q-TABLE LOADING ============
+async function loadQTable() {
+  try {
+    const response = await fetch('assets/q_table.json');
+    const data = await response.json();
+    state.qTable = data.q_table;
+    state.qTableLoaded = true;
+    console.log(`Q-table loaded: ${Object.keys(state.qTable).length} states`);
+    console.log('Training metadata:', data.metadata);
+  } catch (e) {
+    console.warn('Could not load Q-table, RL agent will fall back to random:', e);
+    state.qTableLoaded = false;
+  }
+}
+
+/**
+ * Get the RL agent's move using the Q-table.
+ * 
+ * Board state mapping:
+ *   Game uses 'human'/'ai'/null → Q-table uses 1/2/0
+ *   Human = player 1 (goes first), AI = player 2
+ * 
+ * The Q-table was trained with self-play where the agent played both sides.
+ * To use it as player 2 (AI), we look up the current state and pick
+ * the action with the highest Q-value for the current player.
+ */
+function getQLearningMove() {
+  // Convert board to Q-table format: human=1, ai=2, empty=0
+  const qState = state.board.map(v => v === HUMAN ? 1 : v === AI ? 2 : 0);
+  const stateKey = qState.join(',');
+  
+  const available = getAvailableMoves(state.board);
+  
+  if (state.qTable && state.qTable[stateKey]) {
+    const qValues = state.qTable[stateKey];
+    
+    // Find available move with highest Q-value
+    let bestMove = available[0];
+    let bestQ = -Infinity;
+    
+    for (const move of available) {
+      const q = parseFloat(qValues[String(move)] || 0);
+      if (q > bestQ) {
+        bestQ = q;
+        bestMove = move;
+      }
+    }
+    
+    state.stats.nodesExplored = Object.keys(qValues).length;
+    state.stats.depth = 0;
+    return bestMove;
+  }
+  
+  // Fallback: random move if state not in Q-table
+  state.stats.nodesExplored = 1;
+  state.stats.depth = 0;
+  return available[Math.floor(Math.random() * available.length)];
+}
+
 
 // ============ SCREEN MANAGEMENT ============
 function showScreen(name) {
@@ -134,6 +196,7 @@ function evaluate(board, depth) {
 
 /**
  * Minimax with Alpha-Beta Pruning.
+ * builds a game tree object for visualization when buildTree=true.
  * 
  * @param {Array} board - Current board state
  * @param {number} depth - Remaining depth to search
@@ -143,71 +206,119 @@ function evaluate(board, depth) {
  * @param {boolean} usePruning - Whether to apply alpha-beta pruning
  * @returns {{ score: number, move: number|null }}
  */
-function minimax(board, depth, isMaximizing, alpha, beta, usePruning) {
+function minimax(board, depth, isMaximizing, alpha, beta, usePruning, buildTree = false) {
   state.stats.nodesExplored++;
 
-  // Terminal check
   const result = checkWinner(board);
   if (result || depth === 0) {
-    return { score: evaluate(board, depth), move: null };
+    const score = evaluate(board, depth);
+    return { 
+      score, 
+      move: null,
+      tree: buildTree ? { board: [...board], score, children: [], isLeaf: true } : null
+    };
   }
 
   const moves = getAvailableMoves(board);
+  const treeNode = buildTree ? { 
+    board: [...board], 
+    children: [], 
+    isMaximizing, 
+    isLeaf: false 
+  } : null;
 
   if (isMaximizing) {
-    // MAX player (human) — maximize score
     let bestScore = -Infinity;
     let bestMove = moves[0];
 
     for (const move of moves) {
       board[move] = HUMAN;
-      const { score } = minimax(board, depth - 1, false, alpha, beta, usePruning);
+      const result = minimax(board, depth - 1, false, alpha, beta, usePruning, buildTree);
       board[move] = null;
 
-      if (score > bestScore) {
-        bestScore = score;
+      if (buildTree && result.tree) {
+        result.tree.move = move;
+        result.tree.score = result.score;
+        treeNode.children.push(result.tree);
+      }
+
+      if (result.score > bestScore) {
+        bestScore = result.score;
         bestMove = move;
       }
 
       if (usePruning) {
         alpha = Math.max(alpha, bestScore);
-        // Beta cutoff: MIN already has a better option elsewhere
         if (beta <= alpha) {
           state.stats.pruned++;
+          if (buildTree) {
+            // Mark remaining moves as pruned
+            for (let j = moves.indexOf(move) + 1; j < moves.length; j++) {
+              treeNode.children.push({ 
+                move: moves[j], 
+                pruned: true, 
+                board: [...board],
+                score: null 
+              });
+            }
+          }
           break;
         }
       }
     }
-    return { score: bestScore, move: bestMove };
+
+    if (buildTree) {
+      treeNode.score = bestScore;
+      treeNode.bestMove = bestMove;
+    }
+    return { score: bestScore, move: bestMove, tree: treeNode };
 
   } else {
-    // MIN player (AI) — minimize score
     let bestScore = Infinity;
     let bestMove = moves[0];
 
     for (const move of moves) {
       board[move] = AI;
-      const { score } = minimax(board, depth - 1, true, alpha, beta, usePruning);
+      const result = minimax(board, depth - 1, true, alpha, beta, usePruning, buildTree);
       board[move] = null;
 
-      if (score < bestScore) {
-        bestScore = score;
+      if (buildTree && result.tree) {
+        result.tree.move = move;
+        result.tree.score = result.score;
+        treeNode.children.push(result.tree);
+      }
+
+      if (result.score < bestScore) {
+        bestScore = result.score;
         bestMove = move;
       }
 
       if (usePruning) {
         beta = Math.min(beta, bestScore);
-        // Alpha cutoff: MAX already has a better option elsewhere
         if (beta <= alpha) {
           state.stats.pruned++;
+          if (buildTree) {
+            for (let j = moves.indexOf(move) + 1; j < moves.length; j++) {
+              treeNode.children.push({ 
+                move: moves[j], 
+                pruned: true, 
+                board: [...board],
+                score: null 
+              });
+            }
+          }
           break;
         }
       }
     }
-    return { score: bestScore, move: bestMove };
+
+    if (buildTree) {
+      treeNode.score = bestScore;
+      treeNode.bestMove = bestMove;
+    }
+    return { score: bestScore, move: bestMove, tree: treeNode };
   }
 }
-
 /**
  * Get the AI's move based on difficulty.
  */
@@ -216,15 +327,11 @@ function getAIMove() {
 
   switch (state.difficulty) {
     case 'easy': {
-      // Pure random
-      const moves = getAvailableMoves(state.board);
       state.stats.depth = 0;
-      state.stats.nodesExplored = 1;
-      return moves[Math.floor(Math.random() * moves.length)];
+      return getQLearningMove();
     }
 
     case 'medium': {
-      // Depth-limited minimax (no pruning) — beatable but strategic
       const maxDepth = 3;
       state.stats.depth = maxDepth;
       const { move } = minimax(
@@ -234,14 +341,44 @@ function getAIMove() {
     }
 
     case 'hard': {
-      // Full minimax with alpha-beta pruning — unbeatable
       const maxDepth = 9;
       state.stats.depth = maxDepth;
-      const { move } = minimax(
-        [...state.board], maxDepth, false, -Infinity, Infinity, true
+      // Build game tree for visualization (only top 2 levels to keep it manageable)
+      const buildViz = getAvailableMoves(state.board).length <= 7;
+      const { move, tree } = minimax(
+        [...state.board], maxDepth, false, -Infinity, Infinity, true, buildViz
       );
+      if (tree) state.gameTree = tree;
       return move;
     }
+  }
+}
+
+// ============ AI EXPLAINER ============
+function getAIExplanation(move, difficulty) {
+  const cellNames = [
+    'top-left', 'top-center', 'top-right',
+    'middle-left', 'center', 'middle-right',
+    'bottom-left', 'bottom-center', 'bottom-right'
+  ];
+  
+  const pos = cellNames[move];
+  const nodes = state.stats.nodesExplored.toLocaleString();
+  const pruned = state.stats.pruned.toLocaleString();
+  
+  if (difficulty === 'easy') {
+    if (state.qTableLoaded) {
+      return `RL agent chose ${pos} — this move had the highest Q-value based on ${nodes} learned state-action pairs from self-play training.`;
+    }
+    return `Picked ${pos} randomly.`;
+  }
+  
+  if (difficulty === 'medium') {
+    return `Minimax searched ${nodes} possible futures (depth 3) and chose ${pos} as the strongest move.`;
+  }
+  
+  if (difficulty === 'hard') {
+    return `Alpha-beta pruning explored ${nodes} states, pruned ${pruned} branches, and chose ${pos} — the provably optimal move.`;
   }
 }
 
@@ -286,6 +423,20 @@ function showThinking(show) {
   $('#ai-thinking').classList.toggle('visible', show);
 }
 
+
+function showExplanation(text) {
+  const el = $('#ai-explanation');
+  if (el) {
+    el.textContent = text;
+    el.classList.add('visible');
+  }
+}
+
+function hideExplanation() {
+  const el = $('#ai-explanation');
+  if (el) el.classList.remove('visible');
+}
+
 // ============ GAME FLOW ============
 function handleCellClick(e) {
   const cell = e.currentTarget;
@@ -298,6 +449,7 @@ function handleCellClick(e) {
   // Human places piece
   state.board[index] = HUMAN;
   renderBoard();
+  hideExplanation();
 
   // Check for game end
   const result = checkWinner(state.board);
@@ -312,13 +464,17 @@ function handleCellClick(e) {
   setStatus('');
   showThinking(true);
 
-  // Delay for feel + thinking animation
+  // Delay for thinking animation
   setTimeout(() => {
     const aiMove = getAIMove();
     state.board[aiMove] = AI;
     renderBoard();
     updateStats();
     showThinking(false);
+
+    // Show AI explanation
+    const explanation = getAIExplanation(aiMove, state.difficulty);
+    showExplanation(explanation);
 
     const result2 = checkWinner(state.board);
     if (result2) {
@@ -382,6 +538,19 @@ function showResultScreen(winner) {
     sub.textContent = 'perfectly balanced ✿';
   }
 
+  // Difficulty-specific result subtitle
+  if (winner === AI && state.difficulty === 'hard') {
+    sub.textContent = 'minimax with α-β pruning is unbeatable!';
+  } else if (winner === AI && state.difficulty === 'easy') {
+    sub.textContent = 'the RL agent learned well from self-play!';
+  } else if (winner === HUMAN && state.difficulty === 'easy') {
+    sub.textContent = 'you outsmarted the Q-learning agent!';
+  }
+
+  const algoName = state.difficulty === 'easy' ? 'Q-learning' : 
+                   state.difficulty === 'medium' ? 'minimax' : 'α-β pruning';
+
+
   // Stats
   statsDiv.innerHTML = `
     <div class="result-stat">
@@ -406,6 +575,7 @@ function resetGame() {
   state.currentPlayer = HUMAN;
   state.gameOver = false;
   state.stats = { nodesExplored: 0, pruned: 0, depth: 0 };
+  state.gameTree = null;
 
   // Clear board UI
   $$('.cell').forEach(cell => {
@@ -425,11 +595,13 @@ function resetGame() {
   updateStats();
   setStatus('your turn');
   showThinking(false);
+  hideExplanation();
 }
 
 // ============ EVENT LISTENERS ============
 function init() {
   createSparkles();
+  loadQTable(); // async load the RL policy
 
   // Difficulty selection
   $$('.btn-difficulty').forEach(btn => {
@@ -469,5 +641,5 @@ function init() {
   });
 }
 
-// Go!
+// start
 init();
