@@ -153,12 +153,27 @@ function renderGameTreeSVG(tree) {
   if (!simplified) return '<div class="tree-empty">Tree too small to visualize.</div>';
 
   const svgWidth = 1200;
-  const svgHeight = 500;
+  //const svgHeight = 500;
   const levelHeight = 150;
+
+  // Count the actual depth of the tree
+function getTreeDepth(node, d = 0) {
+  if (!node || !node.children || node.children.length === 0) return d;
+  let maxD = d;
+  for (const child of node.children) {
+    if (!child.isEllipsis && !child.pruned) {
+      maxD = Math.max(maxD, getTreeDepth(child, d + 1));
+    }
+  }
+  return maxD;
+}
+
+const treeDepth = getTreeDepth(simplified) + 1;
+const svgHeight = treeDepth * levelHeight + 80;
+
   const positions = layoutTree(simplified, svgWidth / 2, 40, svgWidth * 0.85, levelHeight);
 
   let svg = `<svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg" class="tree-svg">`;
-
   // Draw edges first (behind nodes)
   for (const pos of positions) {
     if (pos.parentX !== undefined && pos.parentY !== undefined) {
