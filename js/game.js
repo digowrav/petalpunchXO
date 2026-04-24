@@ -434,7 +434,10 @@ function showExplanation(text) {
 
 function hideExplanation() {
   const el = $('#ai-explanation');
-  if (el) el.classList.remove('visible');
+  if (el) {
+    el.classList.remove('visible');
+    el.textContent = '';
+  }
 }
 
 // ============ GAME FLOW ============

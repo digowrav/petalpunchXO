@@ -289,6 +289,9 @@ html, body {
   display: flex;
   align-items: center;
   gap: 6px;
+  text-align: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .ai-badge-dot {
@@ -697,6 +700,7 @@ html, body {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   opacity: 0;
+  overflow: hidden;
   transform: translateY(6px);
   transition: opacity 0.4s ease, transform 0.4s ease;
   pointer-events: none;
@@ -706,7 +710,11 @@ html, body {
   opacity: 1;
   transform: translateY(0);
   pointer-events: all;
+  max-height: 200px;
+  padding: 10px 16px;
+  pointer-events: all;
 }
+
 
 /* ===== GAME TREE PANEL ===== */
 .tree-toggle-btn {
@@ -724,6 +732,7 @@ html, body {
   display: flex;
   align-items: center;
   gap: 5px;
+  margin-top: 4px;
 }
 
 .tree-toggle-btn:hover {

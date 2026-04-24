@@ -110,7 +110,7 @@ function layoutTree(node, x, y, levelWidth, levelHeight, depth = 0) {
 
   if (node.children && node.children.length > 0) {
     const childCount = node.children.length;
-    const totalWidth = levelWidth / Math.pow(1.8, depth);
+    const totalWidth = levelWidth / Math.pow(1.3, depth);
     const startX = x - totalWidth / 2;
     const childSpacing = totalWidth / (childCount > 1 ? childCount - 1 : 1);
 
@@ -152,9 +152,9 @@ function renderGameTreeSVG(tree) {
   const simplified = simplifyTree(tree, 3);
   if (!simplified) return '<div class="tree-empty">Tree too small to visualize.</div>';
 
-  const svgWidth = 700;
-  const svgHeight = 360;
-  const levelHeight = 110;
+  const svgWidth = 1200;
+  const svgHeight = 500;
+  const levelHeight = 150;
   const positions = layoutTree(simplified, svgWidth / 2, 40, svgWidth * 0.85, levelHeight);
 
   let svg = `<svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg" class="tree-svg">`;
