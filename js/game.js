@@ -378,7 +378,7 @@ function getAIExplanation(move, difficulty) {
   }
   
   if (difficulty === 'hard') {
-    return `Alpha-beta pruning explored ${nodes} states, pruned ${pruned} branches, and chose ${pos} — the provably optimal move.`;
+    return `Alpha-beta pruning explored ${nodes} states, pruned ${pruned} branches, and chose ${pos}.`;
   }
 }
 

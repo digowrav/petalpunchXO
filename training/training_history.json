@@ -1,1 +1,6 @@
-{"episode_rewards": [0.3], "epsilon_values": [0.08207986830082], "q_table_sizes": [4519], "win_rates": [0.114]}
+{
+  "episode_rewards": [0.3],
+  "epsilon_values": [0.08207986830082],
+  "q_table_sizes": [4519],
+  "win_rates": [0.114]
+}

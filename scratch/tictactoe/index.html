@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Tic Tac Toe ♡</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Background -->
+  <div class="bg-layer"></div>
+  
+  <!-- Floating pixel sparkles -->
+  <div class="sparkles" id="sparkles"></div>
+
+  <!-- ====== START SCREEN ====== -->
+  <div id="screen-start" class="screen active">
+    <div class="start-container">
+      <div class="title-group">
+        <img src="assets/heart-brooch.png" alt="heart" class="title-icon bounce-slow">
+        <h1 class="game-title">Tic Tac Toe</h1>
+        <p class="game-subtitle">♡ a cute lil game ♡</p>
+      </div>
+
+      <div class="bunny-display">
+        <img src="assets/bunny.png" alt="bunnies" class="bunny-img float-animation">
+      </div>
+
+      <div class="difficulty-section">
+        <p class="difficulty-label">choose difficulty</p>
+        <div class="difficulty-buttons">
+          <button class="btn-difficulty" data-difficulty="easy">
+            <span class="diff-icon">✿</span>
+            <span class="diff-name">Easy</span>
+            <span class="diff-desc">random moves</span>
+          </button>
+          <button class="btn-difficulty selected" data-difficulty="medium">
+            <span class="diff-icon">❀</span>
+            <span class="diff-name">Medium</span>
+            <span class="diff-desc">minimax d=3</span>
+          </button>
+          <button class="btn-difficulty" data-difficulty="hard">
+            <span class="diff-icon">♛</span>
+            <span class="diff-name">Hard</span>
+            <span class="diff-desc">α-β pruning</span>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-play" id="btn-play">
+        <span>Play</span>
+        <span class="play-heart">♡</span>
+      </button>
+
+      <div class="ai-badge">
+        <span class="ai-badge-dot"></span>
+        AI powered by minimax + alpha-beta pruning
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== GAME SCREEN ====== -->
+  <div id="screen-game" class="screen">
+    <div class="game-container">
+      <div class="game-header">
+        <div class="player-indicator">
+          <div class="player-tag player-you active" id="tag-you">
+            <img src="assets/heart-gem.png" alt="heart" class="tag-icon">
+            <span>You</span>
+          </div>
+          <span class="vs-text">vs</span>
+          <div class="player-tag player-ai" id="tag-ai">
+            <img src="assets/flower.png" alt="flower" class="tag-icon">
+            <span>AI</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="board-wrapper">
+        <div class="board" id="board">
+          <div class="cell" data-index="0"></div>
+          <div class="cell" data-index="1"></div>
+          <div class="cell" data-index="2"></div>
+          <div class="cell" data-index="3"></div>
+          <div class="cell" data-index="4"></div>
+          <div class="cell" data-index="5"></div>
+          <div class="cell" data-index="6"></div>
+          <div class="cell" data-index="7"></div>
+          <div class="cell" data-index="8"></div>
+        </div>
+        <!-- Win line overlay -->
+        <svg class="win-line-svg" id="win-line-svg" viewBox="0 0 300 300">
+          <line id="win-line" x1="0" y1="0" x2="0" y2="0" />
+        </svg>
+      </div>
+
+      <div class="game-status" id="game-status">your turn ♡</div>
+
+      <div class="game-controls">
+        <button class="btn-small" id="btn-restart">restart</button>
+        <button class="btn-small" id="btn-home">home</button>
+      </div>
+
+      <!-- AI thinking indicator -->
+      <div class="ai-thinking" id="ai-thinking">
+        <div class="thinking-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <span class="thinking-text">AI is thinking...</span>
+      </div>
+
+      <!-- Stats bar -->
+      <div class="stats-bar">
+        <div class="stat">
+          <span class="stat-label">nodes explored</span>
+          <span class="stat-value" id="stat-nodes">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">pruned</span>
+          <span class="stat-value" id="stat-pruned">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">depth</span>
+          <span class="stat-value" id="stat-depth">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== RESULT SCREEN ====== -->
+  <div id="screen-result" class="screen">
+    <div class="result-container">
+      <div class="result-icon-wrap" id="result-icon-wrap">
+        <!-- dynamically filled -->
+      </div>
+      <h2 class="result-title" id="result-title">You Win!</h2>
+      <p class="result-sub" id="result-sub">amazing job ♡</p>
+      
+      <div class="result-stats" id="result-stats">
+        <!-- filled dynamically -->
+      </div>
+
+      <div class="result-buttons">
+        <button class="btn-play" id="btn-play-again">
+          <span>Play Again</span>
+          <span class="play-heart">♡</span>
+        </button>
+        <button class="btn-small" id="btn-result-home">home</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/game.js"></script>
+</body>
+</html>
