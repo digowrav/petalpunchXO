@@ -348,16 +348,19 @@ function renderGameTreeSVG(tree) {
 // ============ PANEL CONTROLS ============
 function toggleTreePanel() {
   const panel = document.getElementById('tree-panel');
+  const overlay = document.getElementById('tree-overlay');
   if (!panel) return;
 
   const isVisible = panel.classList.contains('visible');
 
   if (isVisible) {
     panel.classList.remove('visible');
+    if (overlay) overlay.classList.remove('visible');
   } else {
-    currentMaxDepth = 2; // reset to 2 levels when opening
+    currentMaxDepth = 2;
     refreshTreeContent();
     panel.classList.add('visible');
+    if (overlay) overlay.classList.add('visible');
   }
 }
 

@@ -719,19 +719,19 @@ html, body {
 /* ===== GAME TREE PANEL ===== */
 .tree-toggle-btn {
   font-family: 'Silkscreen', cursive;
-  font-size: 9px;
+  font-size: 12px;
   color: var(--lavender);
   background: rgba(201, 177, 255, 0.12);
   border: 1px solid rgba(201, 177, 255, 0.25);
-  border-radius: 8px;
-  padding: 6px 14px;
+  border-radius: 10px;
+  padding: 10px 20px;
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
   margin-top: 4px;
 }
 
@@ -744,61 +744,89 @@ html, body {
   font-size: 12px;
 }
 
+/* ===== TREE MODAL OVERLAY ===== */
+.tree-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 49;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.tree-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+
+
+
+
+
 /* The slide-up panel */
 .tree-panel {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
   z-index: 50;
-  background: rgba(30, 15, 50, 0.92);
-  border-top: 1px solid rgba(201, 177, 255, 0.2);
+  background: rgba(20, 10, 40, 0.95);
+  border: 1px solid rgba(201, 177, 255, 0.2);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-radius: 20px 20px 0 0;
-  transform: translateY(100%);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  max-height: 70vh;
+  border-radius: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  width: 90vw;
+  max-width: 1100px;
+  max-height: 85vh;
   overflow-y: auto;
   padding: 0;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 
 .tree-panel.visible {
-  transform: translateY(0);
+  opacity: 1;
+  pointer-events: all;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .tree-panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px 8px;
+  padding: 20px 24px 10px;
   position: sticky;
   top: 0;
-  background: rgba(30, 15, 50, 0.95);
+  background: rgba(20, 10, 40, 0.98);
   z-index: 2;
+  border-radius: 20px 20px 0 0;
 }
 
 .tree-panel-title {
   font-family: 'Press Start 2P', cursive;
-  font-size: 11px;
+  font-size: 14px;
   color: #fff;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .tree-panel-title .title-icon {
-  font-size: 14px;
+  font-size: 18px;
 }
 
 .tree-panel-close {
   font-family: 'Silkscreen', cursive;
-  font-size: 10px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  padding: 4px 12px;
+  border-radius: 8px;
+  padding: 8px 16px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -809,15 +837,15 @@ html, body {
 }
 
 .tree-panel-subtitle {
-  font-size: 9px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.45);
-  padding: 0 20px 12px;
+  padding: 4px 24px 16px;
   letter-spacing: 0.5px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .tree-content {
-  padding: 0 12px 20px;
+  padding: 0 16px 20px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -832,7 +860,7 @@ html, body {
   text-align: center;
   padding: 40px 20px;
   color: rgba(255, 255, 255, 0.4);
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 1px;
 }
 
@@ -840,46 +868,46 @@ html, body {
 .tree-legend {
   display: flex;
   justify-content: center;
-  gap: 16px;
-  padding: 12px 0 4px;
+  gap: 20px;
+  padding: 14px 0 6px;
   flex-wrap: wrap;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 8px;
+  gap: 6px;
+  font-size: 11px;
   color: rgba(255, 255, 255, 0.5);
   letter-spacing: 0.5px;
 }
 
 .legend-dot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   display: inline-block;
 }
 
 /* How It Works section */
 .tree-howto {
-  margin: 12px 20px 0;
-  padding: 14px 16px;
+  margin: 12px 24px 0;
+  padding: 16px 20px;
   background: rgba(255, 255, 255, 0.04);
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .tree-howto-title {
   font-family: 'Silkscreen', cursive;
-  font-size: 9px;
+  font-size: 12px;
   color: var(--lavender);
   margin-bottom: 8px;
   letter-spacing: 1px;
 }
 
 .tree-howto p {
-  font-size: 9px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
   line-height: 1.7;
   letter-spacing: 0.3px;
@@ -897,7 +925,7 @@ html, body {
 
 /* Scrollbar styling */
 .tree-panel::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 
 .tree-panel::-webkit-scrollbar-thumb {
@@ -912,27 +940,32 @@ html, body {
 .tree-panel-controls {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 18px;
 }
 
 .tree-depth-label {
-  font-size: 8px;
+  font-size: 11px;
   color: rgba(255, 255, 255, 0.4);
   letter-spacing: 0.5px;
 }
 
 .tree-depth-btn {
   font-family: 'Silkscreen', cursive;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--lavender);
   background: rgba(201, 177, 255, 0.12);
   border: 1px solid rgba(201, 177, 255, 0.25);
-  border-radius: 6px;
-  width: 28px;
-  height: 28px;
+  border-radius: 8px;
+  width: 34px;
+  height: 34px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+}
+
+.tree-depth-btn:hover {
+  background: rgba(201, 177, 255, 0.25);
+  transform: scale(1.1);
 }
