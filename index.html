@@ -166,12 +166,16 @@
       <span class="title-icon">🌳</span>
       Decision Tree
     </div>
-    <button class="tree-panel-close" onclick="toggleTreePanel()">close</button>
+    <div class="tree-panel-controls">
+      <span class="tree-depth-label" id="tree-depth-label">showing 2 levels</span>
+      <button class="tree-depth-btn" onclick="collapseTree()">−</button>
+      <button class="tree-depth-btn" onclick="expandTree()">+</button>
+      <button class="tree-panel-close" onclick="toggleTreePanel()">close</button>
+    </div>
   </div>
   <p class="tree-panel-subtitle">
-    This shows how the AI evaluated possible moves. Each node is a board state, 
-    pink edges show the chosen path, and ✂ marks branches that were pruned 
-    (skipped because they couldn't change the outcome).
+    Each node shows a board state and its minimax score. Pink = good for you, purple = good for AI. 
+    The highlighted path is the move the AI chose. ✂ = pruned (skipped).
   </p>
   <div class="tree-content" id="tree-content">
     <div class="tree-empty">Make a move on Hard mode to see the decision tree!</div>
@@ -179,13 +183,10 @@
   <div class="tree-howto">
     <div class="tree-howto-title">How Minimax Works</div>
     <p>
-      The AI models the game as a tree of all possible futures. 
-      <span class="highlight-max">MAX (you)</span> tries to maximize the score. 
+      The AI models the game as a tree of all possible futures.
+      <span class="highlight-max">MAX (you)</span> tries to maximize the score.
       <span class="highlight-min">MIN (AI)</span> tries to minimize it.
-      The AI assumes you'll always make the best possible move, then picks its 
-      move accordingly. Alpha-beta pruning skips branches that provably can't 
-      affect the final decision — making the search much faster without 
-      changing the result.
+      Alpha-beta pruning skips branches that can't affect the final decision.
     </p>
   </div>
 </div>

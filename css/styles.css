@@ -908,3 +908,31 @@ html, body {
 .tree-panel::-webkit-scrollbar-track {
   background: transparent;
 }
+
+.tree-panel-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tree-depth-label {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.5px;
+}
+
+.tree-depth-btn {
+  font-family: 'Silkscreen', cursive;
+  font-size: 14px;
+  color: var(--lavender);
+  background: rgba(201, 177, 255, 0.12);
+  border: 1px solid rgba(201, 177, 255, 0.25);
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
