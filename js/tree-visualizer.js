@@ -185,8 +185,9 @@ function renderGameTreeSVG(tree) {
 
   const positions = layoutTree(simplified, svgWidth / 2, 50, svgWidth - padding * 2, levelHeight);
 
+  const displayWidth = Math.max(svgWidth, 800);
   let svg = `<svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg" 
-             class="tree-svg" style="min-width:${Math.min(svgWidth, 1400)}px">`;
+             class="tree-svg" style="width:${displayWidth}px; height:auto">`;
 
   // Glow filter
   svg += `<defs>
